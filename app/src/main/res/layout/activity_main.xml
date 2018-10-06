@@ -6,34 +6,42 @@
     android:layout_height="match_parent"
     tools:context="com.hariharan.stimulonwallet.MainActivity">
 
-    <TextView
-        android:id="@+id/textView"
+    <!--<TextView-->
+        <!--android:id="@+id/textView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="150dp"-->
+        <!--android:text="@string/password_lbl"-->
+        <!--android:textSize="20sp" />-->
+
+    <!--<EditText-->
+        <!--android:id="@+id/password"-->
+        <!--android:layout_width="280dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/textView"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="31dp"-->
+        <!--android:hint="@string/password_edttxt"-->
+        <!--android:inputType="textPassword" />-->
+
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/password"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:text="@string/submit"-->
+        <!--android:id="@+id/submit"-->
+        <!--android:visibility="invisible"/>-->
+
+
+    <fragment
+        android:id="@+id/fragment"
+        android:name="com.hariharan.stimulonwallet.Fragments.TransactionsFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="150dp"
-        android:text="@string/password_lbl"
-        android:textSize="20sp" />
-
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="280dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="31dp"
-        android:hint="@string/password_edttxt"
-        android:inputType="textPassword" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/password"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="@string/submit"
-        android:id="@+id/submit"/>
-
-
+        android:layout_centerVertical="true" />
 </RelativeLayout>
