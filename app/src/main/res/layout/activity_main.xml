@@ -39,7 +39,7 @@
 
     <fragment
         android:id="@+id/fragment"
-        android:name="com.hariharan.stimulonwallet.Fragments.TransactionsFragment"
+        android:name="com.hariharan.stimulonwallet.Fragments.AuthFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

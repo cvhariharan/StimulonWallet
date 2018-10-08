@@ -6,4 +6,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="stm">STM Balance</string>
+    <string name="tx">Transaction #</string>
+    <string name="etherscan_url">https://api.etherscan.io/api?module=account&amp;action=tokentx&amp;contractaddress=0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2&amp;address=0x4e83362442b8d1bec281594cea3050c8eb01311c&amp;page=1&amp;offset=100&amp;sort=asc&amp;apikey=</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>

@@ -1,38 +1,28 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.hariharan.stimulonwallet.Fragments.TransactionsFragment">
 
+
     <TextView
-    android:id="@+id/textView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentTop="true"
-    android:layout_centerHorizontal="true"
-    android:layout_marginTop="150dp"
-    android:text="@string/password_lbl"
-    android:textSize="20sp" />
+        android:id="@+id/balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="39dp"
+        android:paddingBottom="20dp"
+        android:text="@string/stm"
+        android:textSize="32sp"
+        />
 
-    <EditText
-    android:id="@+id/password"
-    android:layout_width="280dp"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/textView"
-    android:layout_centerHorizontal="true"
-    android:layout_marginTop="31dp"
-    android:hint="@string/password_edttxt"
-    android:inputType="textPassword" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/transactions"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/balance"
+        />
 
-    <Button
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/password"
-    android:layout_centerHorizontal="true"
-    android:layout_marginTop="20dp"
-    android:text="@string/submit"
-    android:id="@+id/submit"
-    android:visibility="invisible"/>
-
-
-</FrameLayout>
+</RelativeLayout>
