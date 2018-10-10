@@ -8,6 +8,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="stm">STM Balance</string>
     <string name="tx">Transaction #</string>
-    <string name="etherscan_url">https://api.etherscan.io/api?module=account&amp;action=tokentx&amp;contractaddress=0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2&amp;address=0x4e83362442b8d1bec281594cea3050c8eb01311c&amp;page=1&amp;offset=100&amp;sort=asc&amp;apikey=</string>
+    <string name="etherscan_url">https://api-ropsten.etherscan.io/api?module=logs&amp;action=getLogs&amp;fromBlock=4179141&amp;toBlock=latest&amp;address=0x35fc96236e097b78650b2953b428e1f444e0e76b&amp;topic0=0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef&amp;apikey=</string>
     <string name="title_activity_main2">Main2Activity</string>
 </resources>

@@ -41,8 +41,8 @@ public class AuthFragment extends Fragment {
     private View mView;
     private Button mSubmit;
     private EditText password;
-    private Credentials credentials;
-    private Web3j web3j;
+    public static Credentials credentials;
+    public static Web3j web3j;
     private SharedPreferences preferences;
     @Nullable
     @Override
