@@ -1,5 +1,6 @@
 package com.hariharan.stimulonwallet.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,11 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hariharan.stimulonwallet.AccountActivity;
 import com.hariharan.stimulonwallet.R;
+import com.hariharan.stimulonwallet.ScanAndSend;
 import com.hariharan.stimulonwallet.contracts.Token;
 
 import org.json.JSONArray;
@@ -46,6 +49,7 @@ public class TransactionsFragment extends Fragment {
     private ProgressBar mProgress;
     private TextView mBalance;
     private Token token;
+    private Button sendBtn;
 
     @Nullable
     @Override
@@ -54,6 +58,16 @@ public class TransactionsFragment extends Fragment {
         mRecycler = (RecyclerView) mView.findViewById(R.id.transactions);
         mProgress = mView.findViewById(R.id.progress);
         mBalance = mView.findViewById(R.id.balance);
+
+        sendBtn = (Button) mView.findViewById(R.id.send_btn);
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), ScanAndSend.class);
+                startActivity(i);
+            }
+        });
+
         transactionsList = new ArrayList<>();
 
         //Make the API call in a new thread
