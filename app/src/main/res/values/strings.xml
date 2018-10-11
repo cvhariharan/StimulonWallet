@@ -11,4 +11,5 @@
     <string name="etherscan_url">https://api-ropsten.etherscan.io/api?module=logs&amp;action=getLogs&amp;fromBlock=4179141&amp;toBlock=latest&amp;address=0x35fc96236e097b78650b2953b428e1f444e0e76b&amp;topic0=0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef&amp;apikey=</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="send_btn">Send STM</string>
+    <string name="stm_hint">Amount of STM</string>
 </resources>

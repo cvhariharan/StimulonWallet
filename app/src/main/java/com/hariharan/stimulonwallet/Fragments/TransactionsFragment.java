@@ -6,17 +6,21 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hariharan.stimulonwallet.AccountActivity;
 import com.hariharan.stimulonwallet.R;
 import com.hariharan.stimulonwallet.ScanAndSend;
+import com.hariharan.stimulonwallet.Utils.TokenHandler;
 import com.hariharan.stimulonwallet.contracts.Token;
 
 import org.json.JSONArray;
@@ -50,6 +54,7 @@ public class TransactionsFragment extends Fragment {
     private TextView mBalance;
     private Token token;
     private Button sendBtn;
+    private EditText valueIp;
 
     @Nullable
     @Override
@@ -58,13 +63,20 @@ public class TransactionsFragment extends Fragment {
         mRecycler = (RecyclerView) mView.findViewById(R.id.transactions);
         mProgress = mView.findViewById(R.id.progress);
         mBalance = mView.findViewById(R.id.balance);
+        valueIp = mView.findViewById(R.id.stm);
 
         sendBtn = (Button) mView.findViewById(R.id.send_btn);
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getContext(), ScanAndSend.class);
-                startActivity(i);
+                String value = valueIp.getText().toString();
+                if(!TextUtils.isEmpty(value)) {
+                    Intent i = new Intent(getContext(), ScanAndSend.class);
+                    i.putExtra("value",value);
+                    startActivity(i);
+                } else {
+                    Toast.makeText(getContext(), "STM value cannot be empty", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -130,9 +142,12 @@ public class TransactionsFragment extends Fragment {
             for(int i = 0; i < results.length(); i++) {
                 JSONObject tx = results.getJSONObject(i);
                 String toAddress = tx.getJSONArray("topics").getString(1);
-                String fromAdress = tx.getJSONArray("topics").getString(2);
-                Log.d(TAG, "parseJson: To: "+toAddress+" From: "+fromAdress);
-                if(toAddress.equals("0x0000000000000000000000002a5f493594ef5e7d81448c237dfb87003485fce5") || fromAdress.equals("0x0000000000000000000000002a5f493594ef5e7d81448c237dfb87003485fce5")) {
+                String fromAddress = tx.getJSONArray("topics").getString(2);
+                Log.d(TAG, "parseJson: To: "+toAddress+" From: "+fromAddress);
+                toAddress = Numeric.prependHexPrefix(toAddress.substring(26));
+                fromAddress = Numeric.prependHexPrefix(fromAddress.substring(26));
+                Log.d(TAG, "parseJson: To: "+toAddress+" From: "+fromAddress+" My: "+TokenHandler.credentials.getAddress());
+                if(toAddress.equals(TokenHandler.credentials.getAddress()) || fromAddress.equals(TokenHandler.credentials.getAddress())) {
                     Log.d(TAG, "parseJson: "+ Numeric.decodeQuantity(tx.getString("data")));
                     transactionsList.add(new Transaction(tx));
                 }

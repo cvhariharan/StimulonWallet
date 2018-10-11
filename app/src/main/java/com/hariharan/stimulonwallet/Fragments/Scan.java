@@ -22,16 +22,22 @@ import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.zxing.Result;
 import com.hariharan.stimulonwallet.R;
+import com.hariharan.stimulonwallet.Utils.TokenHandler;
 
 public class Scan extends Fragment {
 
     private static final String TAG = "Scan";
     private View mView;
     private CodeScanner mCodeScanner;
+    private String stm;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_scan, container, false);
+
+        stm = getActivity().getIntent().getExtras().getString("value");
+
         CodeScannerView scannerView = mView.findViewById(R.id.scanner_view);
         if(checkCameraPermission()) {
             mCodeScanner = new CodeScanner(getContext(), scannerView);
@@ -42,7 +48,10 @@ public class Scan extends Fragment {
                         @Override
                         public void run() {
                             String address = result.getText();
-                            Log.d(TAG, "run: "+address);
+                            Log.d(TAG, "run: To: "+address+" send: "+stm);
+                            String hash = TokenHandler.sendTo(address, stm);
+                            if(hash != null)
+                                Log.d(TAG, "run: Hash: "+hash);
                         }
                         });
                     }
