@@ -17,9 +17,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hariharan.stimulonwallet.AccountActivity;
 import com.hariharan.stimulonwallet.R;
-import com.hariharan.stimulonwallet.ScanAndSend;
+import com.hariharan.stimulonwallet.ReceiveActivity;
+import com.hariharan.stimulonwallet.ScanActivity;
 import com.hariharan.stimulonwallet.Utils.TokenHandler;
 import com.hariharan.stimulonwallet.contracts.Token;
 
@@ -28,10 +28,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 import okhttp3.Call;
@@ -41,7 +39,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import org.web3j.abi.datatypes.Address;
-import org.web3j.abi.datatypes.Uint;
 import org.web3j.utils.Numeric;
 
 public class TransactionsFragment extends Fragment {
@@ -53,7 +50,7 @@ public class TransactionsFragment extends Fragment {
     private ProgressBar mProgress;
     private TextView mBalance;
     private Token token;
-    private Button sendBtn;
+    private Button sendBtn, recvBtn;
     private EditText valueIp;
 
     @Nullable
@@ -71,12 +68,21 @@ public class TransactionsFragment extends Fragment {
             public void onClick(View v) {
                 String value = valueIp.getText().toString();
                 if(!TextUtils.isEmpty(value)) {
-                    Intent i = new Intent(getContext(), ScanAndSend.class);
+                    Intent i = new Intent(getContext(), ScanActivity.class);
                     i.putExtra("value",value);
                     startActivity(i);
                 } else {
                     Toast.makeText(getContext(), "STM value cannot be empty", Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+
+        recvBtn = mView.findViewById(R.id.recv_btn);
+        recvBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), ReceiveActivity.class);
+                startActivity(i);
             }
         });
 
@@ -214,6 +220,7 @@ class Transaction {
     private int index;
     public Transaction(JSONObject tx) {
         try {
+            String sign = "-";
             index = tx.getJSONArray("topics").getString(1).equals(AuthFragment.credentials.getAddress()) ? 2 : 1;
             otherAddress = tx.getJSONArray("topics").getString(index).substring(26);
             value = Numeric.decodeQuantity(tx.getString("data")).toString();

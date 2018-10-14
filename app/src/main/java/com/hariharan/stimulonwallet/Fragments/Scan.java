@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,12 +22,21 @@ import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.zxing.Result;
+import com.hariharan.stimulonwallet.AccountActivity;
 import com.hariharan.stimulonwallet.R;
 import com.hariharan.stimulonwallet.Utils.TokenHandler;
+import com.hariharan.stimulonwallet.contracts.Token;
+
+import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.generated.Uint256;
+
+import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class Scan extends Fragment {
 
-    private static final String TAG = "Scan";
+    private static final String TAG = "ScanFragment";
     private View mView;
     private CodeScanner mCodeScanner;
     private String stm;
@@ -49,9 +59,25 @@ public class Scan extends Fragment {
                         public void run() {
                             String address = result.getText();
                             Log.d(TAG, "run: To: "+address+" send: "+stm);
-                            String hash = TokenHandler.sendTo(address, stm);
-                            if(hash != null)
-                                Log.d(TAG, "run: Hash: "+hash);
+                            SendToken sendToken = new SendToken();
+                            sendToken.execute(address, stm);
+                            Intent i = new Intent(getContext(), AccountActivity.class);
+                            startActivity(i);
+//                            Future<String> hash = TokenHandler.sendTo(address, stm);
+//                            try {
+//                                if(hash.get() != null) {
+//                                    Log.d(TAG, "run: Hash: " + hash);
+//                                    Toast.makeText(getContext(), "Sent", Toast.LENGTH_LONG).show();
+//                                } else {
+//                                    Toast.makeText(getContext(), "Could not send", Toast.LENGTH_LONG).show();
+//                                }
+//                                Intent i = new Intent(getContext(), AccountActivity.class);
+//                                startActivity(i);
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            } catch (ExecutionException e) {
+//                                e.printStackTrace();
+//                            }
                         }
                         });
                     }
@@ -101,4 +127,32 @@ public class Scan extends Fragment {
             mCodeScanner.releaseResources();
         super.onPause();
     }
+
+    class SendToken extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            Token token = TokenHandler.loadToken();
+            try {
+                Log.d(TAG, "doInBackground: "+strings[0]);
+                return token.transfer(new Address(strings[0]), new Uint256(Long.valueOf(strings[1])))
+                .sendAsync().get().getTransactionHash();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String res) {
+            super.onPostExecute(res);
+            Log.d(TAG, "onPostExecute: Done");
+            if(res != null) {
+                Toast.makeText(getContext(), res, Toast.LENGTH_LONG).show();
+                Log.d(TAG, "onPostExecute: "+res);
+            }
+        }
+    }
 }
+
+
