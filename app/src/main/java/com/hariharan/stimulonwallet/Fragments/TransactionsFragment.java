@@ -95,29 +95,30 @@ public class TransactionsFragment extends Fragment {
                 makeAPICall(getString(R.string.etherscan_url));
             }
         }).start();
-        token = Token.load(getString(R.string.token_address), AuthFragment.web3j,
-                AuthFragment.credentials, BigInteger.valueOf(200000), BigInteger.valueOf(21));
+        token = TokenHandler.loadToken();
 
+        //Use the transactions to calculate the balance for an accurate balance
         //Make the token call in a new thread
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final BigInteger balance = token.balanceOf(new Address(AuthFragment.credentials.getAddress())).sendAsync().get().getValue();
-                    mBalance.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.d(TAG, "run: "+balance);
-                            mBalance.setText(balance.toString());
-                        }
-                    });
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    final BigInteger balance = token.balanceOf(new Address(TokenHandler.credentials.getAddress())).sendAsync().get().getValue();
+//                    Log.d(TAG, "run: address: "+TokenHandler.credentials.getAddress());
+//                    mBalance.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Log.d(TAG, "run: "+balance);
+//                            mBalance.setText(balance.toString());
+//                        }
+//                    });
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                } catch (ExecutionException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
         return mView;
     }
 
@@ -142,22 +143,27 @@ public class TransactionsFragment extends Fragment {
 
     public void parseJson(String resp) {
         try {
-            Log.d(TAG, "parseJson: "+resp);
+            //Set the balance to zero
+            Transaction.balance = 0;
+
             JSONObject jsonResp = new JSONObject(resp);
             JSONArray results = jsonResp.getJSONArray("result");
             for(int i = 0; i < results.length(); i++) {
                 JSONObject tx = results.getJSONObject(i);
                 String toAddress = tx.getJSONArray("topics").getString(1);
                 String fromAddress = tx.getJSONArray("topics").getString(2);
-                Log.d(TAG, "parseJson: To: "+toAddress+" From: "+fromAddress);
                 toAddress = Numeric.prependHexPrefix(toAddress.substring(26));
                 fromAddress = Numeric.prependHexPrefix(fromAddress.substring(26));
-                Log.d(TAG, "parseJson: To: "+toAddress+" From: "+fromAddress+" My: "+TokenHandler.credentials.getAddress());
                 if(toAddress.equals(TokenHandler.credentials.getAddress()) || fromAddress.equals(TokenHandler.credentials.getAddress())) {
                     Log.d(TAG, "parseJson: "+ Numeric.decodeQuantity(tx.getString("data")));
                     transactionsList.add(new Transaction(tx));
                 }
             }
+
+            //Calculate balance from previous transactions as it is updated on etherscan much faster
+            Log.d(TAG, "parseJson: Balance "+Transaction.balance);
+            mBalance.setText(String.valueOf(Transaction.balance));
+
             mRecycler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -215,15 +221,24 @@ public class TransactionsFragment extends Fragment {
 }
 
 class Transaction {
+    private static final String TAG = "Transaction";
     public String otherAddress;
     public String value;
     private int index;
+    public static int balance=0;
     public Transaction(JSONObject tx) {
         try {
             String sign = "-";
-            index = tx.getJSONArray("topics").getString(1).equals(AuthFragment.credentials.getAddress()) ? 2 : 1;
+            String fromAddress = Numeric.prependHexPrefix(tx.getJSONArray("topics").getString(1).substring(26));
+            index = fromAddress.equals(AuthFragment.credentials.getAddress()) ? 2 : 1;
+            Log.d(TAG, "Transaction: JSON: "+fromAddress);
+            Log.d(TAG, "Transaction: NJ: "+AuthFragment.credentials.getAddress());
+            Log.d(TAG, "Transaction: Index: "+index);
             otherAddress = tx.getJSONArray("topics").getString(index).substring(26);
-            value = Numeric.decodeQuantity(tx.getString("data")).toString();
+            if(index == 1)
+                sign = "+";
+            value = sign+Numeric.decodeQuantity(tx.getString("data")).toString();
+            balance += Integer.valueOf(value);
         } catch (JSONException e) {
             e.printStackTrace();
         }

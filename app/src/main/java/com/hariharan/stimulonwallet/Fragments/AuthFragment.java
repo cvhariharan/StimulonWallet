@@ -54,12 +54,12 @@ public class AuthFragment extends Fragment {
 
         TokenHandler.tokenAddress = getString(R.string.token_address);
 
+        String infuraAPI = getString(R.string.infura_api);
+        web3j = Web3jFactory.build(new HttpService("https://ropsten.infura.io/v3/"+infuraAPI));
+        TokenHandler.web3j = web3j;
         mSubmit.post(new Runnable() {
             @Override
             public void run() {
-                String infuraAPI = getString(R.string.infura_api);
-                web3j = Web3jFactory.build(new HttpService("https://ropsten.infura.io/v3/"+infuraAPI));
-                TokenHandler.web3j = web3j;
                 try {
                     Log.d(TAG, "onCreate: " + web3j.web3ClientVersion().sendAsync().get().getWeb3ClientVersion());
                     Log.d(TAG, "run: ");
@@ -90,7 +90,7 @@ public class AuthFragment extends Fragment {
                     credentials = WalletUtils.loadCredentials(password.getText().toString(),
                             getContext().getDir("wallets", MODE_PRIVATE).toString()+"/"+filename);
                     TokenHandler.credentials = credentials;
-                    Token token = Token.load(tokenAddress, web3j, credentials, BigInteger.valueOf(2000000), BigInteger.valueOf(21));
+                    Token token = TokenHandler.loadToken();//Token.load(tokenAddress, web3j, credentials, BigInteger.valueOf(2000000), BigInteger.valueOf(21));
                     Future<Uint256> futureValue = token.balanceOf(new Address(credentials.getAddress())).sendAsync();
                     Log.d(TAG, "onClick: "+credentials.getAddress());
                     Log.d(TAG, "onClick: Balance - "+ futureValue.get().getValue());

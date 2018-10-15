@@ -62,6 +62,8 @@ public class TokenHandler {
     }
 
     public static Token loadToken() {
-        return Token.load(tokenAddress, web3j, credentials, BigInteger.valueOf(2400000000L), BigInteger.valueOf(2000000L));
+        if(token == null)
+            token = Token.load(tokenAddress, web3j, credentials, BigInteger.valueOf(60000000000L), BigInteger.valueOf(503570L));
+        return token;
     }
 }
