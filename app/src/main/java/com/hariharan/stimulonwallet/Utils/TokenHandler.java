@@ -5,15 +5,11 @@ import android.util.Log;
 
 import com.hariharan.stimulonwallet.contracts.Token;
 
-import org.json.JSONObject;
 import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 
-import org.web3j.tx.Contract;
-import org.web3j.tx.ManagedTransaction;
 
 import java.math.BigInteger;
 import java.util.concurrent.Callable;

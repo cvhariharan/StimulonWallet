@@ -54,22 +54,36 @@ public class AuthFragment extends Fragment {
 
         TokenHandler.tokenAddress = getString(R.string.token_address);
 
-        String infuraAPI = getString(R.string.infura_api);
-        web3j = Web3jFactory.build(new HttpService("https://ropsten.infura.io/v3/"+infuraAPI));
-        TokenHandler.web3j = web3j;
-        mSubmit.post(new Runnable() {
+        mSubmit.setVisibility(View.GONE);
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+                    String infuraAPI = getString(R.string.infura_api);
+                    web3j = Web3jFactory.build(new HttpService("https://ropsten.infura.io/v3/"+infuraAPI));
+                    TokenHandler.web3j = web3j;
                     Log.d(TAG, "onCreate: " + web3j.web3ClientVersion().sendAsync().get().getWeb3ClientVersion());
                     Log.d(TAG, "run: ");
-                    mSubmit.setVisibility(View.VISIBLE);
+                    mSubmit.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d(TAG, "run: Enabled");
+                            mSubmit.setVisibility(View.VISIBLE);
+                            initializeButton();
+                            Log.d(TAG, "run: Initialized");
+                        }
+                    });
                 }catch (Exception e) {
                     Log.e(TAG, "onCreate: "+e.getMessage());
                 }
             }
-        });
+        }).start();
 
+
+        return mView;
+    }
+
+    private void initializeButton() {
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,7 +121,6 @@ public class AuthFragment extends Fragment {
                 }
             }
         });
-        return mView;
     }
 
 }
