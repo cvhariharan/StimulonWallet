@@ -77,6 +77,11 @@ public class TransactionsFragment extends Fragment {
             }
         });
 
+        mRecycler.setVisibility(View.INVISIBLE);
+        mRecycler.setHasFixedSize(true);
+        mRecycler.setAdapter(new TransactionsAdapter(new ArrayList<Transaction>()));
+        mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+
         recvBtn = mView.findViewById(R.id.recv_btn);
         recvBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,9 +174,7 @@ public class TransactionsFragment extends Fragment {
                 public void run() {
                     mProgress.setVisibility(View.INVISIBLE);
                     mRecycler.setVisibility(View.VISIBLE);
-                    mRecycler.setHasFixedSize(true);
                     mRecycler.setAdapter(new TransactionsAdapter(transactionsList));
-                    mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
                 }
             });
 
