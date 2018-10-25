@@ -167,7 +167,12 @@ public class TransactionsFragment extends Fragment {
 
             //Calculate balance from previous transactions as it is updated on etherscan much faster
             Log.d(TAG, "parseJson: Balance "+Transaction.balance);
-            mBalance.setText(String.valueOf(Transaction.balance));
+            mBalance.post(new Runnable() {
+                @Override
+                public void run() {
+                    mBalance.setText(String.valueOf(Transaction.balance));
+                }
+            });
 
             mRecycler.post(new Runnable() {
                 @Override
